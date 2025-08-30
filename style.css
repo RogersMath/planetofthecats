@@ -246,3 +246,55 @@ body {
 #winScreen, #townScreen, #gameOverScreen, #narrativeScreen { 
     display: none; 
 }
+
+/* --- New Audio Control Styles --- */
+#audioControls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 250; /* Above game UI, below modals */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(26, 42, 26, 0.9);
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #6bff73;
+}
+
+#muteBtn {
+    background: none;
+    border: none;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    cursor: pointer;
+    padding: 0;
+    color: #f0f0f0;
+}
+
+#volumeSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 5px;
+    background: #444;
+    outline: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #6bff73;
+    border-radius: 50%;
+}
+
+#volumeSlider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #6bff73;
+    border-radius: 50%;
+    border: none;
+}
