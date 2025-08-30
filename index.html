@@ -8,6 +8,12 @@
 </head>
 <body>
     <div id="game-wrapper">
+        <!-- Audio Controls UI -->
+        <div id="audioControls">
+            <button id="muteBtn">🔊</button>
+            <input type="range" id="volumeSlider" min="0" max="100" value="30">
+        </div>
+
         <!-- Start, Win, Game Over, Narrative Screens (No Changes) -->
         <div id="startScreen" class="modal-screen">
             <div class="modal-title">CYBORG CAT TRADER</div>
@@ -40,35 +46,29 @@
                 </div>
             </div>
         </div>
-
-        <!-- Town Screen (Updated Layout) -->
         <div id="townScreen" class="modal-screen">
             <div class="town-content">
                 <div class="town-header">
                     <div class="modal-title" id="townName">Settlement Alpha</div>
                     <div class="town-ui-panel">Credits: <span id="townUICredits">0</span></div>
                 </div>
-                
                 <div class="trade-section market-section">
                     <h3>Market Prices</h3>
                     <div id="marketPrices"></div>
                 </div>
-                
                 <div class="trade-section inventory-section">
                     <h3>Your Inventory (Space: <span id="inventorySpace">0/10</span>)</h3>
                     <div class="inventory-grid" id="playerInventory"></div>
                 </div>
-                
                 <div class="trade-section rumor-section">
                     <button class="modal-button" id="rumorBtn">Buy Rumor (50 credits)</button>
                     <div id="rumorInfo"></div>
                 </div>
-                
                 <button class="modal-button" id="exitTownBtn">Leave Settlement</button>
             </div>
         </div>
 
-        <!-- Game Container and UI (No Changes) -->
+        <!-- Game Container and UI -->
         <div id="gameContainer">
             <canvas id="gameCanvas"></canvas>
             <div id="gameUI">
@@ -94,6 +94,8 @@
             <button class="keypad-btn" data-value="3">3</button>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Main script is now a module to allow imports -->
+    <script src="script.js" type="module"></script>
 </body>
 </html>
