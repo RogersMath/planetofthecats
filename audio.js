@@ -4,10 +4,11 @@ import { generateSong } from './sonantx.js';
 
 let audioContext;
 let masterGain;
+let isMuted = false;
+let lastVolume = 0.3; // Default volume
 
 /**
  * Initializes the Web Audio API context. Must be called after a user interaction.
- * This function no longer starts the music automatically.
  */
 export function initAudio() {
     if (audioContext) return; // Prevent re-initialization
@@ -15,12 +16,16 @@ export function initAudio() {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         
         masterGain = audioContext.createGain();
-        masterGain.gain.value = 0.3;
+        masterGain.gain.value = lastVolume;
         masterGain.connect(audioContext.destination);
 
         document.getElementById('volumeSlider').addEventListener('input', e => {
             if (masterGain) {
-                masterGain.gain.value = e.target.value / 100;
+                const newVolume = e.target.value / 100;
+                lastVolume = newVolume;
+                if (!isMuted) {
+                    masterGain.gain.value = newVolume;
+                }
             }
         });
         
@@ -32,8 +37,23 @@ export function initAudio() {
 }
 
 /**
+ * Toggles the master gain between the last set volume and zero.
+ * @returns {boolean} The new mute state (true if muted, false if not).
+ */
+// --- FIX: The 'export' keyword was missing from this function ---
+export function toggleMute() {
+    if (!audioContext) return false;
+    isMuted = !isMuted;
+    if (isMuted) {
+        masterGain.gain.setValueAtTime(0, audioContext.currentTime);
+    } else {
+        masterGain.gain.setValueAtTime(lastVolume, audioContext.currentTime);
+    }
+    return isMuted;
+}
+
+/**
  * Fetches, generates, and plays the looping background music.
- * CRITICAL FIX: The 'export' keyword makes this function available to other files like main.js.
  */
 export async function playBackgroundMusic() {
     if (!audioContext) {
@@ -67,7 +87,7 @@ export async function playBackgroundMusic() {
  * @param {number} dur The duration of the tone in seconds.
  * @param {string} type The oscillator type ('sine', 'square', 'sawtooth', 'triangle').
  */
-export function playTone(freq, dur, type) {
+export function playTone(freq, dur, type = 'sine') {
     if (!audioContext || !masterGain) return;
 
     const osc = audioContext.createOscillator();
