@@ -1,0 +1,248 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: monospace;
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-wrapper {
+    width: 100vw;
+    height: calc(100vw * 16 / 9);
+    max-height: 100vh;
+    max-width: calc(100vh * 9 / 16);
+    background: linear-gradient(45deg, #2a1a0a 0%, #1a2a0a 50%, #0a1a2a 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #6bff73;
+    box-shadow: 0 0 20px rgba(107, 255, 115, 0.3);
+}
+
+#gameContainer {
+    flex: 3;
+    position: relative;
+    background: radial-gradient(circle at center, #1a2a1a 0%, #0a0a0a 100%);
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#gameUI {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 100;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ui-panel {
+    background: rgba(26, 42, 26, 0.9);
+    border: 1px solid #6bff73;
+    border-radius: 8px;
+    padding: 8px 12px;
+    backdrop-filter: blur(5px);
+    font-size: clamp(0.7rem, 2.5vw, 1rem);
+}
+
+#keypadArea {
+    flex: 1;
+    background: linear-gradient(180deg, #1a2a1e 0%, #0a0a0a 100%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    padding: 8px;
+    border-top: 2px solid #6bff73;
+}
+
+.keypad-btn {
+    background: linear-gradient(135deg, rgba(107, 255, 115, 0.1), rgba(78, 221, 157, 0.1));
+    border: 2px solid #6bff73;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: clamp(1.5rem, 8vw, 3rem);
+    font-family: monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.keypad-btn:hover {
+    background: linear-gradient(135deg, rgba(107, 255, 115, 0.2), rgba(78, 221, 157, 0.2));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(107, 255, 115, 0.3);
+}
+
+.keypad-btn.valid { border-color: #00ff7f; animation: validPulse 2s ease-in-out infinite; }
+.keypad-btn.settlement { border-color: #ffaa00; color: #ffcc44; }
+.keypad-btn.event { border-color: #aa00ff; color: #cc44ff; }
+
+.modal-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    text-align: center;
+    padding: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.modal-title {
+    font-size: clamp(1.8rem, 8vw, 3rem);
+    font-weight: bold;
+    margin-bottom: 10px; /* Reduced margin */
+    text-shadow: 0 0 20px #6bff73;
+    background: linear-gradient(45deg, #ffffff, #6bff73, #4edd9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.modal-text {
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+    margin-bottom: 10px;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+.modal-button {
+    background: linear-gradient(135deg, rgba(107, 255, 115, 0.2), rgba(78, 221, 157, 0.2));
+    border: 2px solid #6bff73;
+    border-radius: 10px;
+    color: #f0f0f0;
+    font-family: monospace;
+    font-size: clamp(1rem, 4vw, 1.3rem);
+    font-weight: bold;
+    padding: 15px 30px;
+    margin: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.modal-button:hover { background: linear-gradient(135deg, rgba(107, 255, 115, 0.3), rgba(78, 221, 157, 0.3)); transform: translateY(-2px); }
+.modal-button:disabled { border-color: #555; color: #777; background: #222; cursor: not-allowed; }
+
+.narrative-content { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; max-width: 90%; }
+.narrative-choices { display: flex; flex-direction: column; width: 100%; }
+.choice-btn { width: 100%; margin: 5px 0; padding: 12px 20px; font-size: clamp(0.9rem, 3.5vw, 1.1rem); }
+
+@keyframes validPulse { 0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 127, 0.3); } 50% { box-shadow: 0 0 20px rgba(0, 255, 127, 0.6); } }
+
+.floating-text { position: absolute; font-weight: bold; font-size: clamp(1rem, 3vw, 1.2rem); pointer-events: none; z-index: 150; animation: floatUp 1.5s ease-out forwards; }
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-60px); } }
+
+/* --- UPDATED Town Screen Styles --- */
+#townScreen {
+    background: linear-gradient(180deg, #1a2a1a 0%, #0a0a0a 100%);
+    overflow-y: auto;
+    justify-content: flex-start; /* Align content to the top */
+    padding: 15px;
+}
+
+.town-content {
+    width: 95%; /* Wider container */
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Tighter gap */
+}
+
+.town-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.town-ui-panel {
+    background: rgba(26, 42, 26, 0.9);
+    border: 1px solid #6bff73;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: clamp(0.8rem, 3vw, 1.1rem);
+    white-space: nowrap;
+}
+
+.trade-section {
+    background: rgba(42, 42, 26, 0.8);
+    border: 2px solid #6bff73;
+    border-radius: 10px;
+    padding: 10px 15px; /* Tighter padding */
+    text-align: left;
+}
+
+.trade-section h3 {
+    margin-bottom: 8px;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+}
+
+/* Market section keeps its scrollbar */
+.market-section {
+    max-height: 200px; /* Or adjust as needed */
+    overflow-y: auto;
+}
+
+/* Inventory and Rumor sections have no scrollbar */
+.inventory-section, .rumor-section {
+    max-height: none;
+    overflow-y: visible;
+}
+
+.rumor-section {
+    text-align: center;
+    padding: 5px;
+}
+
+#rumorInfo {
+    margin-top: 10px;
+    color: #ffaa00;
+}
+
+/* --- End Updated Town Styles --- */
+
+.trade-item { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #444; }
+.trade-item:last-child { border-bottom: none; }
+.item-info { display: flex; gap: 10px; align-items: center; }
+.price { color: #6bff73; font-weight: bold; }
+.desperate { color: #ff6b73; animation: blink 1.5s infinite; }
+@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
+.inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 5px; }
+.inventory-item { background: rgba(26, 42, 26, 0.6); border: 1px solid #6bff73; border-radius: 5px; padding: 10px; text-align: center; font-size: 0.9rem; }
+.trade-btn { border: none; border-radius: 4px; color: #000; font-family: monospace; font-size: 0.8rem; padding: 2px 6px; cursor: pointer; margin-left: 10px; }
+.sell-btn { background: #ff6b73; }
+.sell-btn:hover { background: #ff8a90; }
+.buy-btn { background: #4edd9d; }
+.buy-btn:hover { background: #6bff73; }
+
+#winScreen, #townScreen, #gameOverScreen, #narrativeScreen { 
+    display: none; 
+}
